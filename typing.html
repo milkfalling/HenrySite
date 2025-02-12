@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>多語言打字練習</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', 'Meiryo', 'Malgun Gothic', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #control-panel {
+            margin-bottom: 20px;
+        }
+        #custom-text {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #sample-text {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        #input-area {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+            text-decoration: underline wavy red;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .button {
+            padding: 8px 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>多語言打字練習</h1>
+    
+    <div id="control-panel">
+        <textarea id="custom-text" placeholder="請輸入練習文本..."></textarea>
+        <button class="button" onclick="setCustomText()">設定文本</button>
+        <button class="button" onclick="toggleRealtime()">切換即時檢查</button>
+        <button class="button" onclick="checkResult()">檢查結果</button>
+    </div>
+
+    <div id="sample-text">
+        <p id="message">請輸入練習文本...</p>
+        <p id="target-text"></p>
+    </div>
+
+    <textarea id="input-area" placeholder="在此輸入文字..."></textarea>
+    
+    <div id="result"></div>
+
+    <script>
+        const targetText = document.getElementById('target-text');
+        const inputArea = document.getElementById('input-area');
+        const result = document.getElementById('result');
+        const customText = document.getElementById('custom-text');
+        const message = document.getElementById('message');
+        
+        let isRealtime = true;
+        let savedText = '';
+
+        // 設定自定義文本
+        function setCustomText() {
+            const text = customText.value.trim();
+            if (text) {
+                savedText = text;  // 保存文本
+                targetText.textContent = '';  // 清空目標文本
+                targetText.innerHTML = '';    // 確保完全清空
+                message.textContent = '文本設定成功！';  // 顯示成功訊息
+                inputArea.value = '';
+                result.innerHTML = '';
+            }
+        }
+
+        // 切換即時檢查
+        function toggleRealtime() {
+            isRealtime = !isRealtime;
+            if (!isRealtime) {
+                targetText.innerHTML = '';
+                message.textContent = '文本設定成功！';
+                result.innerHTML = '';
+            } else {
+                if (savedText) {
+                    compareText();
+                }
+            }
+        }
+
+        // 檢查結果
+        function checkResult() {
+            message.textContent = '請輸入以下文字：';  // 顯示提示
+            targetText.textContent = savedText;  // 顯示完整文本
+            compareText();
+        }
+
+        // 比較文本
+        function compareText() {
+            const target = savedText;  // 使用保存的文本而不是當前顯示的文本
+            const input = inputArea.value;
+            let outputHTML = '';
+            let correctCount = 0;
+
+            for (let i = 0; i < Math.max(input.length, target.length); i++) {
+                if (i < input.length) {
+                    if (i < target.length) {
+                        if (input[i] === target[i]) {
+                            outputHTML += `<span class="correct">${target[i]}</span>`;
+                            correctCount++;
+                        } else {
+                            outputHTML += `<span class="incorrect">${target[i]}</span>`;
+                        }
+                    }
+                } else if (i < target.length) {
+                    outputHTML += `<span class="incorrect">${target[i]}</span>`;
+                }
+            }
+
+            const accuracy = target.length > 0 ? (correctCount / target.length * 100).toFixed(1) : 0;
+            
+            targetText.innerHTML = outputHTML;
+            result.innerHTML = `正確率：${accuracy}%`;
+        }
+
+        // 監聽輸入
+        inputArea.addEventListener('input', () => {
+            if (isRealtime) {
+                compareText();
+            }
+        });
+
+        // 初始化頁面
+        message.textContent = '請在上方輸入練習文本...';
+        targetText.textContent = '';
+    </script>
+</body>
+</html> 
