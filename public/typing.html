@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>打字練習</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Microsoft JhengHei", "微軟正黑體", "Heiti TC", "黑體-繁", "PingFang TC", "蘋方-繁", "Noto Sans TC", Arial, sans-serif;
+            background-color: #f5f6fa;
+        }
+        
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 75px;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            margin-bottom: 100px;
+        }
+        
+        .typing-box {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .text-display {
+            font-family: "Microsoft JhengHei", "微軟正黑體", "Heiti TC", "黑體-繁", "PingFang TC", "蘋方-繁", "Noto Sans TC", Arial, sans-serif;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            color: #2c3e50;
+            position: relative;
+        }
+        
+        .text-display span {
+            position: relative;
+        }
+        
+        .text-display span.error {
+            color: #e74c3c;
+            text-decoration: underline wavy #e74c3c;
+        }
+        
+        .text-display span.correct {
+            color: #2ecc71;
+        }
+        
+        .input-area {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #3498db;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            font-family: "Microsoft JhengHei", "微軟正黑體", "Heiti TC", "黑體-繁", "PingFang TC", "蘋方-繁", "Noto Sans TC", Arial, sans-serif;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            min-width: 120px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        
+        .stat-value {
+            font-size: 1.2em;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            background-color: #3498db;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background-color: #2980b9;
+        }
+        
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        
+        .button:hover {
+            background-color: #2980b9;
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .mode-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mode-button.active {
+            background-color: #2c3e50;
+        }
+        
+        .source-selector {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .source-selector select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 2px solid #3498db;
+            font-size: 0.9em;
+        }
+        
+        .language-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .domain-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .domain-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        
+        .domain-button.active {
+            background-color: #2c3e50;
+        }
+        
+        .feature-toggles {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .feature-toggles label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        .translation-display {
+            font-family: "Microsoft JhengHei", "微軟正黑體", "Heiti TC", "黑體-繁", "PingFang TC", "蘋方-繁", "Noto Sans TC", Arial, sans-serif;
+            margin-top: 10px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src='https://memeprod.sgp1.digitaloceanspaces.com/user-wtf/1713784788064.jpg' alt="野獸先輩" class="avatar">
+        <h1>打字練習</h1>
+        <div class="nav-links">
+            <a href="index.html">首頁</a>
+            <a href="blog.html">Blog</a>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="typing-box">
+            <div class="language-selector">
+                <button class="mode-button active" data-lang="zh">中文</button>
+                <button class="mode-button" data-lang="ja">日文</button>
+                <button class="mode-button" data-lang="ko">韓文</button>
+            </div>
+            
+            <div class="mode-selector">
+                <button class="mode-button active" data-mode="word">單詞模式</button>
+                <button class="mode-button" data-mode="sentence">句子模式</button>
+            </div>
+            
+            <div class="domain-selector">
+                <button class="domain-button active" data-domain="programming">編程</button>
+                <button class="domain-button" data-domain="lyrics">歌詞</button>
+                <button class="domain-button" data-domain="tech">科技</button>
+                <button class="domain-button" data-domain="daily">日常</button>
+            </div>
+            
+            <div class="source-selector">
+                <select id="source-select">
+                    <option value="gemini">Google Gemini</option>
+                </select>
+            </div>
+            
+            <div class="feature-toggles">
+                <label>
+                    <input type="checkbox" id="highlight-errors" checked>
+                    即時錯誤提示
+                </label>
+                <label>
+                    <input type="checkbox" id="show-translation" checked>
+                    顯示翻譯
+                </label>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">速度</div>
+                    <div class="stat-value" id="wpm">0 WPM</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">準確率</div>
+                    <div class="stat-value" id="accuracy">100%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">時間</div>
+                    <div class="stat-value" id="time">60s</div>
+                </div>
+            </div>
+            
+            <div class="text-display" id="text-display">
+                點擊開始按鈕開始練習打字。
+            </div>
+            
+            <div id="translation-display" class="translation-display"></div>
+            
+            <textarea class="input-area" id="input-area" placeholder="在這裡輸入文字..." disabled></textarea>
+            
+            <div style="text-align: center;">
+                <button class="button" id="start-btn">開始練習</button>
+                <button class="button" id="reset-btn" style="margin-left: 10px;">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 打字練習</p>
+    </div>
+
+    <script>
+        const textDisplay = document.getElementById('text-display');
+        const inputArea = document.getElementById('input-area');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const wpmDisplay = document.getElementById('wpm');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const timeDisplay = document.getElementById('time');
+
+        const sampleTexts = {
+            zh: {
+                word: [
+                    "程式設計", "人工智能", "網路安全", "數據分析", "雲計算",
+                    "資料庫", "演算法", "框架", "後端", "前端",
+                    "開發者", "測試", "部署", "版本", "代碼",
+                    "接口", "模組", "函數", "變量", "類別"
+                ],
+                sentence: [
+                    "程式設計是一門藝術，需要不斷練習才能提高。",
+                    "寫程式最重要的是保持耐心和專注力。",
+                    "學習新的程式語言可以開拓更多的可能性。",
+                    "好的代碼應該是簡潔且易於維護的。",
+                    "調試是程式開發中重要的技能。",
+                    "持續學習是程式設計師的必修課。",
+                    "團隊合作能夠提高開發效率。",
+                    "程式架構的設計決定了項目的成敗。",
+                    "定期代碼審查可以提高代碼質量。",
+                    "自動化測試能夠提高開發效率。"
+                ]
+            },
+            ja: {
+                word: [
+                    "プログラミング", "人工知能", "セキュリティ", "データ分析", "クラウド",
+                    "データベース", "アルゴリズム", "フレームワーク", "バックエンド", "フロントエンド",
+                    "開発者", "テスト", "デプロイ", "バージョン", "コード",
+                    "インターフェース", "モジュール", "関数", "変数", "クラス"
+                ],
+                sentence: [
+                    "プログラミングは芸術です。",
+                    "新しい言語を学ぶことは大切です。",
+                    "技術の進歩は止まりません。",
+                    "良いコードは簡潔で保守が容易です。",
+                    "デバッグは重要なスキルです。",
+                    "継続的な学習が必要です。",
+                    "チームワークは効率を高めます。",
+                    "設計は成功の鍵です。",
+                    "コードレビューは品質を向上させます。",
+                    "自動テストは効率的です。"
+                ]
+            },
+            ko: {
+                word: [
+                    "프로그래밍", "인공지능", "보안", "데이터", "클라우드",
+                    "데이터베이스", "알고리즘", "프레임워크", "백엔드", "프론트엔드",
+                    "개발자", "테스트", "배포", "버전", "코드",
+                    "인터페이스", "모듈", "함수", "변수", "클래스"
+                ],
+                sentence: [
+                    "프로그래밍은 예술입니다.",
+                    "새로운 언어를 배우는 것이 중요합니다.",
+                    "기술의 발전은 멈추지 않습니다.",
+                    "좋은 코드는 간단하고 유지보수가 쉽습니다.",
+                    "디버깅은 중요한 기술입니다.",
+                    "지속적인 학습이 필요합니다.",
+                    "팀워크는 효율성을 높입니다.",
+                    "설계는 성공의 열쇠입니다.",
+                    "코드 리뷰는 품질을 향상시킵니다.",
+                    "자동화 테스트는 효율적입니다."
+                ]
+            }
+        };
+
+        let timeLeft = 60;
+        let timer;
+        let startTime;
+        let isTyping = false;
+        let currentLang = 'zh';
+        let currentMode = 'word';
+        let isServerAvailable = false;
+        let currentDomain = 'programming';
+        let highlightErrors = true;
+        let showTranslation = true;
+
+        startBtn.addEventListener('click', startTyping);
+        resetBtn.addEventListener('click', resetTyping);
+        inputArea.addEventListener('input', checkTyping);
+
+        // 語言選擇器事件監聽
+        document.querySelectorAll('.language-selector .mode-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.language-selector .mode-button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                currentLang = this.dataset.lang;
+                updateSourceOptions();
+                if (isTyping) {
+                    startTyping();
+                }
+            });
+        });
+
+        // 模式選擇器事件監聽
+        document.querySelectorAll('.mode-selector .mode-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.mode-selector .mode-button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                currentMode = this.dataset.mode;
+                if (isTyping) {
+                    startTyping();
+                }
+            });
+        });
+
+        // 修改來源選擇器
+        function updateSourceOptions() {
+            const sourceSelect = document.getElementById('source-select');
+            sourceSelect.innerHTML = '<option value="gemini">Google Gemini</option>';
+        }
+
+        // 檢查服務器狀態
+        async function checkServer() {
+            try {
+                const response = await fetch('/api/health', {
+                    method: 'GET',
+                    timeout: 2000
+                });
+                isServerAvailable = response.ok;
+                console.log('Server status:', response.status);  // 添加調試信息
+            } catch (error) {
+                isServerAvailable = false;
+                console.error('Server check error:', error);  // 添加錯誤日誌
+            }
+        }
+
+        // 添加文本顯示更新函數
+        function updateTextDisplay(targetText, currentText) {
+            const textDisplay = document.getElementById('text-display');
+            
+            if (!highlightErrors) {
+                textDisplay.textContent = targetText;
+                return;
+            }
+
+            // 清空原有內容
+            textDisplay.innerHTML = '';
+            
+            // 逐字符比較並添加樣式
+            for (let i = 0; i < targetText.length; i++) {
+                const span = document.createElement('span');
+                span.textContent = targetText[i];
+                
+                if (i < currentText.length) {
+                    if (targetText[i] === currentText[i]) {
+                        span.className = 'correct';
+                    } else {
+                        span.className = 'error';
+                    }
+                }
+                
+                textDisplay.appendChild(span);
+            }
+        }
+
+        // 修改 getAIGeneratedText 函數，添加領域相關的提示詞
+        function getPromptForDomain() {
+            const domainPrompts = {
+                programming: {
+                    zh: {
+                        word: '生成一個中文編程相關單詞，主題可以是程式語言、框架、技術術語等。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的中文編程相關句子，內容可以是程式語言、框架、技術術語等。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    },
+                    ja: {
+                        word: '生成一個日文編程相關單詞（使用日文漢字或假名），主題可以是程式語言、框架、技術術語等。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的日文編程相關句子，內容可以是程式語言、框架、技術術語等。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    },
+                    ko: {
+                        word: '生成一個韓文編程相關單詞，主題可以是程式語言、框架、技術術語等。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的韓文編程相關句子，內容可以是程式語言、框架、技術術語等。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    }
+                },
+                lyrics: {
+                    zh: {
+                        word: '生成一個中文流行歌詞中常見的詞語。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的中文流行歌詞片段。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    },
+                    ja: {
+                        word: '生成一個日文流行歌詞中常見的詞語（使用日文漢字或假名）。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的日文流行歌詞片段。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    },
+                    ko: {
+                        word: '生成一個韓文流行歌詞中常見的詞語。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的韓文流行歌詞片段。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    }
+                },
+                tech: {
+                    zh: {
+                        word: '生成一個中文科技相關單詞，主題可以是人工智能、區塊鏈、物聯網等。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的中文科技相關句子。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    },
+                    ja: {
+                        word: '生成一個日文科技相關單詞（使用日文漢字或假名），主題可以是人工智能、區塊鏈、物聯網等。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的日文科技相關句子。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    },
+                    ko: {
+                        word: '生成一個韓文科技相關單詞，主題可以是人工智能、區塊鏈、物聯網等。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的韓文科技相關句子。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    }
+                },
+                daily: {
+                    zh: {
+                        word: '生成一個中文日常生活相關單詞，主題可以是飲食、交通、天氣等。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的中文日常生活相關句子。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    },
+                    ja: {
+                        word: '生成一個日文日常生活相關單詞（使用日文漢字或假名），主題可以是飲食、交通、天氣等。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的日文日常生活相關句子。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    },
+                    ko: {
+                        word: '生成一個韓文日常生活相關單詞，主題可以是飲食、交通、天氣等。只需要返回單詞，不需要解釋。',
+                        sentence: '生成一個簡短的韓文日常生活相關句子。句子長度不要超過15個字。只需要返回句子，不需要解釋。'
+                    }
+                }
+            };
+
+            return domainPrompts[currentDomain][currentLang][currentMode];
+        }
+
+        // 修改 getAIGeneratedText 函數使用新的提示詞
+        async function getAIGeneratedText() {
+            const prompt = getPromptForDomain();
+            
+            try {
+                console.log('Sending request with prompt:', prompt);
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: [{
+                            role: "user",
+                            content: prompt
+                        }],
+                        system: "你是一個打字練習助手，只需要生成簡短的文字供用戶練習打字。不需要任何解釋或額外內容。"
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.details || errorData.error || '未知錯誤');
+                }
+
+                const data = await response.json();
+                console.log('API response:', data);
+                
+                if (!data.content?.[0]?.text) {
+                    throw new Error('無效的API響應格式');
+                }
+
+                return data.content[0].text.trim();
+            } catch (error) {
+                console.error('AI產生文字失敗：', error);
+                // 使用本地文字作為備用
+                const texts = sampleTexts[currentLang][currentMode];
+                return texts[Math.floor(Math.random() * texts.length)];
+            }
+        }
+
+        async function startTyping() {
+            if (!isTyping) {
+                try {
+                    isTyping = true;
+                    inputArea.disabled = false;
+                    inputArea.value = '';
+                    inputArea.focus();
+                    textDisplay.textContent = "正在產生文字...";
+                    
+                    const text = await getAIGeneratedText();
+                    textDisplay.textContent = text;
+                    
+                    startTime = new Date().getTime();
+                    startTimer();
+                } catch (error) {
+                    resetTyping();
+                    textDisplay.textContent = "產生失敗，請點擊開始重試。";
+                }
+            }
+        }
+
+        function resetTyping() {
+            isTyping = false;
+            inputArea.disabled = true;
+            inputArea.value = '';
+            textDisplay.textContent = "點擊開始按鈕開始練習打字。";
+            document.getElementById('translation-display').textContent = '';  // 清空翻譯
+            clearInterval(timer);
+            timeLeft = 60;
+            timeDisplay.textContent = timeLeft + 's';
+            wpmDisplay.textContent = '0 WPM';
+            accuracyDisplay.textContent = '100%';
+        }
+
+        function checkTyping() {
+            if (isTyping) {
+                const currentText = inputArea.value;
+                const targetText = textDisplay.textContent;
+                
+                // 更新顯示
+                updateTextDisplay(targetText, currentText);
+                
+                // 計算準確率
+                let correctChars = 0;
+                for (let i = 0; i < currentText.length; i++) {
+                    if (currentText[i] === targetText[i]) {
+                        correctChars++;
+                    }
+                }
+                const accuracy = Math.floor((correctChars / currentText.length) * 100) || 100;
+                accuracyDisplay.textContent = accuracy + '%';
+                
+                // 計算WPM
+                const timeElapsed = (new Date().getTime() - startTime) / 1000 / 60;
+                const wordsTyped = currentText.length / 5;
+                const wpm = Math.floor(wordsTyped / timeElapsed) || 0;
+                wpmDisplay.textContent = wpm + ' WPM';
+                
+                // 檢查是否完成並顯示翻譯
+                if (currentText === targetText) {
+                    if (showTranslation) {
+                        getTranslation(targetText);
+                    }
+                    startTyping();
+                }
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft + 's';
+                if (timeLeft <= 0) {
+                    resetTyping();
+                }
+            }, 1000);
+        }
+
+        // 在頁面加載時檢查服務器狀態
+        window.addEventListener('load', async () => {
+            await checkServer();
+            // 更新UI顯示當前模式
+            const sourceSelect = document.getElementById('source-select');
+            if (!isServerAvailable) {
+                sourceSelect.innerHTML = '<option value="local">本地模式（服務器未連接）</option>';
+            }
+        });
+
+        // 添加獲取翻譯的函數
+        async function getTranslation(text) {
+            try {
+                // 如果是中文，不需要翻譯
+                if (currentLang === 'zh') {
+                    document.getElementById('translation-display').textContent = '';
+                    return;
+                }
+
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: [{
+                            role: "user",
+                            content: `將這段${currentLang === 'ja' ? '日文' : '韓文'}翻譯成中文：${text}。只需要返回翻譯結果，不要加任何解釋。`
+                        }],
+                        system: "你是一個翻譯助手，只需要返回翻譯結果，不需要任何解釋或額外內容。"
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('翻譯請求失敗');
+                }
+
+                const data = await response.json();
+                
+                if (!data.content?.[0]?.text) {
+                    throw new Error('無效的翻譯響應格式');
+                }
+
+                // 清理翻譯文本
+                const translatedText = data.content[0].text
+                    .replace(/^["']|["']$/g, '')  // 移除引號
+                    .replace(/翻譯：|譯文：|中文：/g, '')  // 移除標籤
+                    .trim();
+
+                document.getElementById('translation-display').textContent = translatedText;
+            } catch (error) {
+                console.error('翻譯失敗：', error);
+                document.getElementById('translation-display').textContent = '無法取得翻譯';
+            }
+        }
+
+        // 添加事件監聽器
+        document.querySelectorAll('.domain-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.domain-button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                currentDomain = this.dataset.domain;
+                if (isTyping) {
+                    startTyping();
+                }
+            });
+        });
+
+        document.getElementById('highlight-errors').addEventListener('change', function() {
+            highlightErrors = this.checked;
+            if (isTyping) {
+                updateTextDisplay(textDisplay.textContent, inputArea.value);
+            }
+        });
+
+        document.getElementById('show-translation').addEventListener('change', function() {
+            showTranslation = this.checked;
+            if (!this.checked) {
+                document.getElementById('translation-display').textContent = '';
+            }
+        });
+    </script>
+</body>
+</html> 

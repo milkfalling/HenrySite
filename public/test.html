@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>測試頁面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .test-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 20px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>API 測試頁面</h1>
+    <button class="test-button" onclick="testHealth()">測試健康檢查</button>
+    <button class="test-button" onclick="testGenerate()">測試生成 API</button>
+    <div id="result" class="result">點擊按鈕開始測試</div>
+
+    <script>
+        async function testHealth() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `
+                    健康檢查結果：<br>
+                    狀態碼：${response.status}<br>
+                    響應：${JSON.stringify(data)}
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    錯誤：<br>
+                    ${error.message}
+                `;
+            }
+        }
+
+        async function testGenerate() {
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: [{
+                            role: "user",
+                            content: "生成一個簡短的測試句子"
+                        }],
+                        system: "你是一個測試助手",
+                        apiType: "openai"
+                    })
+                });
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `
+                    生成 API 測試結果：<br>
+                    狀態碼：${response.status}<br>
+                    響應：${JSON.stringify(data)}
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    錯誤：<br>
+                    ${error.message}
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 
